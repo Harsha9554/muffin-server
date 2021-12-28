@@ -1,0 +1,8 @@
+{
+  "name": "muffin-data-js",
+  "version": "1.0.0",
+  "description": "Muffin Mutual Funds fetch using JS",
+  "main": "index.js",
+  "author": "Sai SriHarsha Griddaluru",
+  "license": "MIT"
+}
