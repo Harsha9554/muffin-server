@@ -4,5 +4,10 @@
   "description": "Muffin Mutual Funds fetch using JS",
   "main": "index.js",
   "author": "Sai SriHarsha Griddaluru",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "fs": "^0.0.1-security",
+    "moment": "^2.29.1"
+  }
 }
