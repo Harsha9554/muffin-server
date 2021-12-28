@@ -10,7 +10,7 @@ const main = () => {
 		const { data } = response;
 		const actualFunds = JSON.stringify(await formatData(data));
 		fs.writeFile(
-			"/home/harsha9554/code/projects/web/js-ts/muffin-data/src/resources/muffin-data.json",
+			"/home/harsha9554/code/projects/web/java/muffin-server/src/muffin-data-js/src/resources/muffin-data.json",
 			actualFunds,
 			(err) => {
 				if (err) {

@@ -9,5 +9,4 @@ public class MuffinServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(MuffinServerApplication.class, args);
     }
-
 }
