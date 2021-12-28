@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Embedded;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -12,6 +14,7 @@ import lombok.Setter;
 public class MutualFund {
     private String name;
     private String code;
+    @Embedded
     private Returns returns;
     private double volatility;
     private String categoryMentioned;
