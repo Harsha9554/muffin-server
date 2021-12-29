@@ -1,16 +1,12 @@
 package com.haven.muffinserver.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Embedded;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class MutualFund {
     private String name;
     private String code;
@@ -20,4 +16,6 @@ public class MutualFund {
     private String categoryMentioned;
     private String category;
     private String subCategory;
+    @Embedded
+    private Details details;
 }

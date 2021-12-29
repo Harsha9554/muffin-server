@@ -22,6 +22,7 @@ public class MuffinServerApplication {
         return args -> {
             ObjectMapper mapper = new ObjectMapper();
             List<MutualFund> mutualFundList = mapper.readValue(new File("src/muffin-data-js/src/resources/muffin-data.json"), new TypeReference<List<MutualFund>>() {});
+            System.out.println(mutualFundList.get(0));
             System.out.println(mutualFundList.size());
         };
     }
