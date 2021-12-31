@@ -3,16 +3,20 @@ package com.haven.muffinserver.model;
 import lombok.*;
 
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Entity
 public class MutualFund {
     private String name;
+    @Id
     private String code;
     @Embedded
     private Returns returns;
-    private double volatility;
+    private Double volatility;
     private String categoryMentioned;
     private String category;
     private String subCategory;

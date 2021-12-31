@@ -20,4 +20,5 @@ public class User {
     private String email;
     private String password;
     private Collection<Role> roles;
+    private Collection<MutualFund> trackingFunds;
 }

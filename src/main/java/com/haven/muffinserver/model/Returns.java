@@ -15,11 +15,11 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Returns {
     @JsonProperty("1")
-    private double oneY;
+    private Double oneY;
     @JsonProperty("3")
-    private double threeY;
+    private Double threeY;
     @JsonProperty("5")
-    private double fiveY;
-    private double inception;
+    private Double fiveY;
+    private Double inception;
     private String date;
 }

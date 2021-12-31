@@ -2,16 +2,19 @@ const axios = require("axios");
 const moment = require("moment");
 const fs = require("fs");
 
-var CODE = ""
+var CODE = "";
 const SERVER_API_URL = "https://api.kuvera.in/mf/api/v4";
 const GET_FUNDS = `${SERVER_API_URL}/fund_schemes/list.json?v=${moment().dayOfYear()}`;
-const GET_FUNDS_DETAILS = (fundCodeListString) => `${SERVER_API_URL}/fund_schemes/${fundCodeListString}.json?v=${moment().dayOfYear()}`;
-let codes = []
+const GET_FUNDS_DETAILS = (fundCodeListString) =>
+	`${SERVER_API_URL}/fund_schemes/${fundCodeListString}.json?v=${moment().dayOfYear()}`;
+let codes = [];
 
 const main = () => {
 	axios.get(GET_FUNDS).then(async (response) => {
 		const { data } = response;
-		const actualFunds = JSON.stringify(await formatData(data));
+		const actualFunds = JSON.stringify(await formatData(data), (k, v) => {
+			return v === null ? undefined : v;
+		});
 		fs.writeFile(
 			"/home/harsha9554/code/projects/web/java/muffin-server/src/muffin-data-js/src/resources/muffin-data.json",
 			actualFunds,
@@ -24,32 +27,6 @@ const main = () => {
 		);
 	});
 };
-
-// const formatData2 = async (data) => {
-// 	let codes = [];
-// 	const categoryList = Object.keys(data);
-// 	categoryList.forEach((category) => {
-// 		const subCategoryList = Object.keys(data[category]);
-// 		subCategoryList.forEach((subCategory) => {
-// 			const fundHouseList = Object.keys(data[category][subCategory]);
-// 			fundHouseList.forEach((fundHouse) => {
-// 				data[category][subCategory][fundHouse].forEach((fund) => {
-// 					const {
-// 						c,
-// 						// kc,
-// 						// n,
-// 						// r,
-// 						// re,
-// 						// v,
-// 					} = fund;
-// 					debugger;
-// 					codes.push(c)
-// 				});
-// 			});
-// 		});
-// 	});
-// 	return codes;
-// };
 
 const formatData = async (data) => {
 	let fundList = [];
@@ -87,8 +64,11 @@ const formatData = async (data) => {
 
 	const promiseList = [];
 	for (let i = 0; i < NUMBER_OF_API_CALLS; i++) {
-		const fundCodeListString = fundList.slice(i * DATA_BATCH_SIZE, (i * DATA_BATCH_SIZE) + DATA_BATCH_SIZE).reduce((prev, curr) => prev ? `${prev}|${curr.code}` : curr.code, '');
-		const apiPromise = axios.get(GET_FUNDS_DETAILS(fundCodeListString))
+		const fundCodeListString = fundList
+			.slice(i * DATA_BATCH_SIZE, i * DATA_BATCH_SIZE + DATA_BATCH_SIZE)
+			.reduce((prev, curr) => (prev ? `${prev}|${curr.code}` : curr.code), "");
+		const apiPromise = axios
+			.get(GET_FUNDS_DETAILS(fundCodeListString))
 			.then((response) => {
 				const { data } = response;
 				data.forEach((details, index) => {
@@ -116,10 +96,7 @@ const formatData = async (data) => {
 
 					 */
 					const {
-						code,
-						name,
 						short_name,
-						category,
 						fund_house,
 						fund_name,
 						short_code,
@@ -127,8 +104,6 @@ const formatData = async (data) => {
 						ISIN,
 						tax_period,
 						nav,
-						last_nav,
-						jan_31_nav,
 						start_date,
 						fund_type,
 						fund_category,
@@ -138,28 +113,45 @@ const formatData = async (data) => {
 						fund_manager,
 					} = details;
 
-					fundList[(i * DATA_BATCH_SIZE) + index].details = {
-						code: code,
-						name: name,
-						shortName: short_name,
-						category: category,
-						fundHouse: fund_house,
-						fundName: fund_name,
-						shortCode: short_code,
-						detailInfo: detail_info,
-						isin: ISIN,
-						taxPeriod: tax_period,
-						nav: nav,
-						lastNav: last_nav,
-						jan31Nav: jan_31_nav,
-						startDate: start_date,
-						fundType: fund_type,
-						fundCategory: fund_category,
-						plan: plan,
-						expenseRatio: expense_ratio,
-						expenseRatioDate: expense_ratio_date,
-						fundManager: fund_manager
-					};
+					const FundKeys = Object.keys(details);
+					if(FundKeys.includes('nav')) {
+						fundList[i * DATA_BATCH_SIZE + index].details = {
+							shortName: short_name,
+							fundHouse: fund_house,
+							fundName: fund_name,
+							shortCode: short_code,
+							detailInfo: detail_info,
+							isin: ISIN,
+							taxPeriod: tax_period,
+							navData: nav,
+							startDate: start_date,
+							fundType: fund_type,
+							fundCategory: fund_category,
+							plan: plan,
+							expenseRatio: expense_ratio,
+							expenseRatioDate: expense_ratio_date,
+							fundManager: fund_manager,
+						};
+					} else {
+						fundList[i * DATA_BATCH_SIZE + index].details = {
+							shortName: short_name,
+							fundHouse: fund_house,
+							fundName: fund_name,
+							shortCode: short_code,
+							detailInfo: detail_info,
+							isin: ISIN,
+							taxPeriod: tax_period,
+							navData: {"nav":0,"date":""},
+							startDate: start_date,
+							fundType: fund_type,
+							fundCategory: fund_category,
+							plan: plan,
+							expenseRatio: expense_ratio,
+							expenseRatioDate: expense_ratio_date,
+							fundManager: fund_manager,
+						};
+
+					}
 				});
 			});
 		promiseList.push(apiPromise);

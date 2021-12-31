@@ -5,16 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Basic;
 import javax.persistence.Embedded;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Details {
-    private String code;
-    private String name;
     private String shortName;
-    private String category;
     private String fundHouse;
     private String fundName;
     private String shortCode;
@@ -23,15 +21,14 @@ public class Details {
     private String ISIN;
     private int taxPeriod;
     @Embedded
+    @Basic(optional = false)
+    @JsonProperty("navData")
     private Nav nav;
-    @Embedded
-    private Nav lastNav;
-    private double jan31Nav;
     private String startDate;
     private String fundType;
     private String fundCategory;
     private String plan;
-    private double expenseRatio;
+    private Double expenseRatio;
     private String expenseRatioDate;
     private String fundManager;
 
